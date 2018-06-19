@@ -23,6 +23,9 @@
 #include <glib.h>
 #include <syslog.h>
 #include <stdbool.h>
+#include <stdint.h>
+
+#ifdef HAVE_ALSA
 #include <alsa/asoundlib.h>
 #include <alsa/mixer.h>
 #include <alsa/error.h>
@@ -150,6 +153,13 @@ end:
         snd_mixer_close(handle);
     return ret;
 }
+
+#else // !HAVE_ALSA
+
+#define set_alsa_playback(mute, nchannels, volume)      false
+#define set_alsa_capture(mute, nchannels, volume)       false
+
+#endif // HAVE_ALSA
 
 void vdagent_audio_playback_sync(uint8_t mute, uint8_t nchannels, uint16_t *volume)
 {
