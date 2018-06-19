@@ -23,7 +23,6 @@
 #include <glib.h>
 #include <syslog.h>
 #include <stdbool.h>
-#include <stdint.h>
 
 #ifdef HAVE_ALSA
 #include <alsa/asoundlib.h>
