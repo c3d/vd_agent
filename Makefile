@@ -22,6 +22,7 @@ SOURCES_bin =					\
 	src/vdagent/x11-randr.c			\
 	src/vdagent/x11.c			\
 	src/vdagent/vdagent.c			\
+	src/vdagent/device-info.c
 
 SOURCES_sbin=					\
 	src/vdagentd/vdagentd.c			\
@@ -88,7 +89,9 @@ CONFIG=						\
 	libXrandr				\
 	getpeereid				\
 	<linux/input.h>				\
-	<linux/uinput.h>
+	<linux/uinput.h>			\
+	<xf86drm.h>				\
+	<xf86drmMode.h>
 
 
 ifndef SPICE_PROTOCOL
