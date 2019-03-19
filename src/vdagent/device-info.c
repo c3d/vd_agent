@@ -28,8 +28,10 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <syslog.h>
+#if HAVE_XF864DRM_H && HAVE_XF864DRMMODE_H
 #include <xf86drm.h>
 #include <xf86drmMode.h>
+#endif // HAVE_XF864DRMMODE_H
 #include <unistd.h>
 #include <X11/extensions/Xrandr.h>
 #include <glib.h>
@@ -223,6 +225,7 @@ static bool compare_addresses(PciAddress *a, PciAddress *b)
     return true;
 }
 
+#if HAVE_XF864DRMMODE_H
 // Connector type names from xorg modesetting driver
 static const char * const modesetting_output_names[] = {
     [DRM_MODE_CONNECTOR_Unknown] = "None" ,
@@ -303,6 +306,7 @@ static void drm_conn_name_modesetting(drmModeConnector *conn, char *dest, size_t
                               sizeof(modesetting_output_names)/sizeof(modesetting_output_names[0]),
                               dest, dlen, false);
 }
+#endif // HAVE_XF864DRMMODE_H
 
 static bool read_hex_value_from_file(const char *path, int* value)
 {
@@ -322,6 +326,7 @@ static bool read_hex_value_from_file(const char *path, int* value)
     return result;
 }
 
+#if HAVE_XF86DRMMODE_H
 // returns a path to a drm device found at the given PCI Address. Returned
 // string must be freed by caller.
 static char* find_device_at_pci_address(PciAddress *pci_addr, int *vendor_id, int *device_id)
@@ -385,6 +390,7 @@ static char* find_device_at_pci_address(PciAddress *pci_addr, int *vendor_id, in
     }
     return NULL;
 }
+#endif // HAVE_XF86DRMMODE_H
 
 // PCI address should be in the following format:
 //   pci/$domain/$slot.$fn/$slot.$fn
@@ -393,6 +399,7 @@ bool lookup_xrandr_output_for_device_info(VDAgentDeviceDisplayInfo *device_info,
                                           XRRScreenResources *xres,
                                           RROutput *output_id)
 {
+#if HAVE_XF86DRMMODE_H
     PciAddress *user_pci_addr = parse_pci_address_from_spice((char*)device_info->device_address);
     if (!user_pci_addr) {
         syslog(LOG_WARNING,
@@ -510,6 +517,7 @@ bool lookup_xrandr_output_for_device_info(VDAgentDeviceDisplayInfo *device_info,
         *output_id = xres->outputs[device_info->device_display_id];
         return true;
     }
+#endif // HAVE_XF86DRMMODE_H
 
     syslog(LOG_WARNING, "Couldn't find an XRandr output for the specified device");
     return false;
